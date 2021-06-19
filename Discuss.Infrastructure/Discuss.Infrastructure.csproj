@@ -4,4 +4,9 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Discuss.Domain\Discuss.Domain.csproj" />
+      <ProjectReference Include="..\Discuss.Persistence\Discuss.Persistence.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -1,4 +1,5 @@
 using Discuss.Domain;
+using Discuss.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
