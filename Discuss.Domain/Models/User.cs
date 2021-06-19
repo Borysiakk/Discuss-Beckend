@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Discuss.Domain
+namespace Discuss.Domain.Models
 {
     public class User
     {
