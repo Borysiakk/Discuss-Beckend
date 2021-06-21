@@ -9,7 +9,7 @@ using Discuss.Domain.Models;
 namespace Discuss.Domain
 {
     //Klasa mockupowa do testów
-    public class InMemoryUserData : IUserData
+    public class InMemoryUserData : IUserService
     {
         List<User> Users;
 
@@ -22,28 +22,29 @@ namespace Discuss.Domain
             };
         }
 
-        public User Add(User user)
+        public int GetUsersCount()
         {
+            return Users.Count;
+        }
+
+        public async Task<User> GetByIdAsync(long id)
+        {
+            await Task.Delay(100);
+            return Users.Find(u => u.Id == id);
+        }
+
+        public async Task<User> AddAsync(User user)
+        {
+            await Task.Delay(100);
             long currentId = Users.Max(u => u.Id);
             user.Id = currentId + 1;
             Users.Add(user);
             return user;
         }
 
-        public User Update(User user)
+        public async Task<User> DeleteAsync(long id)
         {
-            int idx = Users.FindIndex(u => u.Id == user.Id);
-            if (idx != -1)
-            {
-                Users[idx] = user;
-                return Users[idx];
-            }
-            else
-                return null;
-        }
-
-        public User Delete(long id)
-        {
+            await Task.Delay(100);
             User user = Users.Find(u => u.Id == id);
             if (user != null)
             {
@@ -54,29 +55,35 @@ namespace Discuss.Domain
                 return null;
         }
 
-        public User GetById(long id)
+        public async Task<User> UpdateAsync(User user)
         {
-            return Users.Find(u => u.Id == id);
+            await Task.Delay(100);
+            int idx = Users.FindIndex(u => u.Id == user.Id);
+            if (idx != -1)
+            {
+                Users[idx] = user;
+                return Users[idx];
+            }
+            else
+                return null;
         }
 
-        public IEnumerable<User> GetAllUsers()
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
+            await Task.Delay(100);
             return Users;
         }
 
-        public IEnumerable<User> GetUsersByEmail(string email)
+        public async Task<IEnumerable<User>> GetUsersByLoginAsync(string login)
         {
-            return Users.FindAll(u => u.Email.Contains(email));
-        }
-
-        public IEnumerable<User> GetUsersByLogin(string login)
-        {
+            await Task.Delay(100);
             return Users.FindAll(u => u.Email.Contains(login));
         }
 
-        public int GetUsersCount()
+        public async Task<IEnumerable<User>> GetUsersByEmailAsync(string email)
         {
-            return Users.Count;
+            await Task.Delay(100);
+            return Users.FindAll(u => u.Email.Contains(email));
         }
     }
 }

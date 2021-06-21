@@ -19,11 +19,39 @@ namespace Discuss.Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<User>> GetUsers()
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return userData.GetAllUsers().ToList();
+            var users = await userData.GetAllAsync();
+            if(users!=null)
+            {
+                return users.ToList();
+            }
+            else
+                return StatusCode(400, "Error during user retrieve.");
         }
 
+        [HttpGet("{login}")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsersByLogin(string login)
+        {
+            var users = await userData.GetUsersByLoginAsync(login);
+            if (users != null)
+            {
+                return users.ToList();
+            }
+            else
+                return StatusCode(400, "Error during user retrieve.");
+        }
 
+        [HttpGet("{email}")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsersByEmail(string email)
+        {
+            var users = await userData.GetUsersByEmailAsync(email);
+            if (users != null)
+            {
+                return users.ToList();
+            }
+            else
+                return StatusCode(400, "Error during user retrieve.");
+        }
     }
 }

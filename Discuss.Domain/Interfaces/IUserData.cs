@@ -7,15 +7,15 @@ using Discuss.Domain.Models;
 
 namespace Discuss.Domain.Interfaces
 {
-    public interface IUserData
+    public interface IUserService
     {
-        IEnumerable<User> GetAllUsers();
-        IEnumerable<User> GetUsersByLogin(string login);
-        IEnumerable<User> GetUsersByEmail(string email);
-        User GetById(long id);
-        User Update(User user);
-        User Add(User user);
-        User Delete(long id);
         int GetUsersCount();
+        Task<User> GetByIdAsync(long id);
+        Task<User> AddAsync(User user);
+        Task<User> DeleteAsync(long id);
+        Task<User> UpdateAsync(User user);
+        Task<IEnumerable<User>> GetAllAsync();
+        Task<IEnumerable<User>> GetUsersByLoginAsync(string login);
+        Task<IEnumerable<User>> GetUsersByEmailAsync(string email);
     }
 }
