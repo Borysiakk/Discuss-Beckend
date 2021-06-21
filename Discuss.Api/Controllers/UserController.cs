@@ -1,4 +1,5 @@
 ﻿using Discuss.Domain;
+using Discuss.Domain.Interfaces;
 using Discuss.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,16 +13,17 @@ namespace Discuss.Api.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        InMemoryUserData userData; //Tylko dla celów testowych
-        public UserController()
+        private readonly IUserService userService;
+
+        public UserController(IUserService userService)
         {
-            userData = new InMemoryUserData();
+            this.userService = userService;
         }
 
-        [HttpGet]
+        [HttpGet("/GetAll")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            var users = await userData.GetAllAsync();
+            var users = await userService.GetAllAsync();
             if(users!=null)
             {
                 return users.ToList();
@@ -30,10 +32,10 @@ namespace Discuss.Api.Controllers
                 return StatusCode(400, "Error during user retrieve.");
         }
 
-        [HttpGet("{login}")]
+        [HttpGet("/GetByLogin/{login}")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersByLogin(string login)
         {
-            var users = await userData.GetUsersByLoginAsync(login);
+            var users = await userService.GetUsersByLoginAsync(login);
             if (users != null)
             {
                 return users.ToList();
@@ -42,16 +44,57 @@ namespace Discuss.Api.Controllers
                 return StatusCode(400, "Error during user retrieve.");
         }
 
-        [HttpGet("{email}")]
+        [HttpGet("/GetByEmail/{email}")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersByEmail(string email)
         {
-            var users = await userData.GetUsersByEmailAsync(email);
+            var users = await userService.GetUsersByEmailAsync(email);
             if (users != null)
             {
                 return users.ToList();
             }
             else
                 return StatusCode(400, "Error during user retrieve.");
+        }
+
+        [HttpGet("/GetById/{id}")]
+        public async Task<ActionResult<User>> GetUserById(long id)
+        {
+            var user = await userService.GetByIdAsync(id);
+            if(user == null)
+            {
+                return NotFound();
+            }
+            return user;
+        }
+
+        [HttpPost("/AddUser")]
+        public async Task<ActionResult<User>>AddUser(User user)
+        {
+            var retUser = await userService.AddAsync(user);
+            if (retUser == null)
+                return StatusCode(500, "Error during user adding.");
+            else
+                return retUser;
+        }
+
+        [HttpPut("/UpdateUser")]
+        public async Task<ActionResult<User>>UpdateUser(User user)
+        {
+            var retUser = await userService.UpdateAsync(user);
+            if (retUser == null)
+                return StatusCode(500, "Error during user update.");
+            else
+                return retUser;
+        }
+
+        [HttpDelete("/DeleteUser/{id}")]
+        public async Task<ActionResult<User>>DeleteUser(long id)
+        {
+            var retUser = await userService.DeleteAsync(id);
+            if (retUser == null)
+                return StatusCode(500, "Error during user delete.");
+            else
+                return retUser;
         }
     }
 }
