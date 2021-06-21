@@ -9,6 +9,7 @@ namespace Discuss.Domain.Interfaces
 {
     public interface IUserData
     {
+        IEnumerable<User> GetAllUsers();
         IEnumerable<User> GetUsersByLogin(string login);
         IEnumerable<User> GetUsersByEmail(string email);
         User GetById(long id);
