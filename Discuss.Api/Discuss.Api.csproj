@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Discuss.Domain\Discuss.Domain.csproj" />
+      <ProjectReference Include="..\Discuss.Persistence\Discuss.Persistence.csproj" />
     </ItemGroup>
 
 </Project>

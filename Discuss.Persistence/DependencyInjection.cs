@@ -14,3 +14,7 @@ namespace Discuss.Persistence
         }
     }
 }
+
+
+////MIGRACJA BAZY DANYCH
+/// https://docs.microsoft.com/pl-pl/ef/core/managing-schemas/migrations/projects?tabs=dotnet-core-cli
