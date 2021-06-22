@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Discuss.Domain.Interfaces;
 using Discuss.Domain.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Discuss.Domain
 {
@@ -12,9 +13,10 @@ namespace Discuss.Domain
     public class InMemoryUserData : IUserService
     {
         List<User> Users;
-
-        public InMemoryUserData()
+        private ILogger<InMemoryUserData> logger;
+        public InMemoryUserData(ILogger<InMemoryUserData>logger)
         {
+            this.logger = logger;
             Users = new List<User>()
             {
                 new User { Id = 1, Login = "jnowak", Email = "jnowak@test.pl", HashPass = "*******" },
@@ -39,6 +41,7 @@ namespace Discuss.Domain
             long currentId = Users.Max(u => u.Id);
             user.Id = currentId + 1;
             Users.Add(user);
+            logger.LogInformation($"User {user.Id} was added...");
             return user;
         }
 
@@ -49,10 +52,14 @@ namespace Discuss.Domain
             if (user != null)
             {
                 Users.Remove(user);
+                logger.LogInformation($"User {user.Id} removed...");
                 return user;
             }
             else
+            {
+                logger.LogError($"User {id} not exist!");
                 return null;
+            }
         }
 
         public async Task<User> UpdateAsync(User user)
@@ -62,27 +69,34 @@ namespace Discuss.Domain
             if (idx != -1)
             {
                 Users[idx] = user;
+                logger.LogInformation($"User {user.Id} removed...");
                 return Users[idx];
             }
             else
+            {
+                logger.LogError($"User {user.Id} not exist!");
                 return null;
+            }
         }
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
             await Task.Delay(100);
+            logger.LogInformation("Users retrieved...");
             return Users;
         }
 
         public async Task<IEnumerable<User>> GetUsersByLoginAsync(string login)
         {
             await Task.Delay(100);
+            logger.LogInformation("Users by login retrieved...");
             return Users.FindAll(u => u.Email.Contains(login));
         }
 
         public async Task<IEnumerable<User>> GetUsersByEmailAsync(string email)
         {
             await Task.Delay(100);
+            logger.LogInformation("Users by email retrieved...");
             return Users.FindAll(u => u.Email.Contains(email));
         }
     }
