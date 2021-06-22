@@ -18,3 +18,10 @@ namespace Discuss.Persistence
 
 ////MIGRACJA BAZY DANYCH
 /// https://docs.microsoft.com/pl-pl/ef/core/managing-schemas/migrations/projects?tabs=dotnet-core-cli
+/// INSTRUKCJA
+/// Otwieramy CMD lub PowerShell
+/// Wpisujemy cd i ścieżka do projektu
+/// Następnie 
+///dotnet ef migrations add NewMigration --project Discuss.Persistence
+/// i na koniec
+/// dotnet ef database update
