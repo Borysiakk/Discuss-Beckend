@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Discuss.Domain.Interfaces;
 using Discuss.Domain.Models;
 using Discuss.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Discuss.Infrastructure.Services
 {
@@ -18,32 +20,51 @@ namespace Discuss.Infrastructure.Services
 
         public int GetUsersCount()
         {
-            throw new System.NotImplementedException();
+            return _dbContex.Users.Count();
         }
 
         public Task<User> GetByIdAsync(long id)
         {
-            throw new System.NotImplementedException();
+            return _dbContex.Users.FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public Task<User> AddAsync(User user)
+        public async Task<User> AddAsync(User user)
         {
-            throw new System.NotImplementedException();
+            var result = await _dbContex.Users.AddAsync(user);
+            await _dbContex.SaveChangesAsync();
+
+            return result.Entity;
         }
 
-        public Task<User> DeleteAsync(long id)
+        public async Task<User> DeleteAsync(long id)
         {
-            throw new System.NotImplementedException();
+            var user = _dbContex.Users.FirstOrDefault(a => a.Id == id);
+            if (user == null)
+            {
+                return null;
+            }
+
+            _dbContex.Users.Remove(user);
+            await _dbContex.SaveChangesAsync();
+            
+            return user;
         }
 
-        public Task<User> UpdateAsync(User user)
+        public async Task<User> UpdateAsync(User user)
         {
-            throw new System.NotImplementedException();
+            if (await _dbContex.Users.FirstOrDefaultAsync(a => a.Id == user.Id) == null)
+            {
+                return null;
+            }
+            _dbContex.Users.Update(user);
+            await _dbContex.SaveChangesAsync();
+
+            return user;
         }
 
-        public Task<IEnumerable<User>> GetAllAsync()
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
-            throw new System.NotImplementedException();
+            return await _dbContex.Users.ToListAsync();
         }
 
         public Task<IEnumerable<User>> GetUsersByLoginAsync(string login)
