@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace Discuss.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;

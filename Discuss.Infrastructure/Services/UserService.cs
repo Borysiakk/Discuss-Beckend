@@ -64,7 +64,8 @@ namespace Discuss.Infrastructure.Services
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _dbContex.Users.ToListAsync();
+            var users = await _dbContex.Users.ToListAsync();
+            return users;
         }
 
         public Task<IEnumerable<User>> GetUsersByLoginAsync(string login)

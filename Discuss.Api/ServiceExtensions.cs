@@ -12,7 +12,7 @@ namespace Discuss.Api
     {
         public static void ConfigureUserService(this IServiceCollection services)
         {
-            services.AddSingleton<IUserService, InMemoryUserData>(); //Mockup do podmiany na UserService
+            //services.AddSingleton<IUserService, InMemoryUserData>(); //Mockup do podmiany na UserService
         }
     }
 }
