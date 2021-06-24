@@ -15,7 +15,7 @@ namespace Discuss.Domain.Interfaces
         Task<User> DeleteAsync(long id);
         Task<User> UpdateAsync(User user);
         Task<IEnumerable<User>> GetAllAsync();
-        User GetUserByEmailAsync(string email);
-        IEnumerable<User> GetUsersByLoginAsync(string login);
+        Task<User> GetUserByEmailAsync(string email);
+        Task<IEnumerable<User>> GetUsersByLoginAsync(string login);
     }
 }

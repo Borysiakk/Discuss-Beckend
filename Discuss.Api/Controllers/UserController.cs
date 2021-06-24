@@ -33,22 +33,22 @@ namespace Discuss.Api.Controllers
         }
 
         [HttpGet("/User/GetByLogin/{login}")]
-        public ActionResult<IEnumerable<User>> GetUsersByLogin(string login)
+        public async Task<ActionResult<IEnumerable<User>>> GetUsersByLogin(string login)
         {
-            var users = userService.GetUsersByLoginAsync(login).ToList();
+            var users = await userService.GetUsersByLoginAsync(login);
             
             if (users != null && !users.Any())
             {
-                return users;
+                return users.ToList();
             }
             else
                 return NotFound();
         }
 
         [HttpGet("/User/GetByEmail/{email}")]
-        public  ActionResult<User> GetUserByEmail(string email)
+        public async Task<ActionResult<User>> GetUserByEmail(string email)
         {
-            var users =  userService.GetUserByEmailAsync(email);
+            var users =  await userService.GetUserByEmailAsync(email);
             if (users != null)
             {
                 return users;

@@ -43,9 +43,9 @@ namespace Discuss.Test
         [TestCase("1@gmail.com")]
         [TestCase("2@gmail.com")]
         [TestCase("3@gmail.com")]
-        public void GetUserByEmail_FindUserByEmail_User(string email)
+        public async Task GetUserByEmail_FindUserByEmail_User(string email)
         {
-            var user = _userController.GetUserByEmail(email);
+            var user = await _userController.GetUserByEmail(email);
             
             Assert.IsNotNull(user.Value);
         }
