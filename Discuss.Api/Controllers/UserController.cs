@@ -23,37 +23,37 @@ namespace Discuss.Api.Controllers
         [HttpGet("/User/GetAll")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            var users = await userService.GetAllAsync();
-            if(users!=null)
+            var users = (await userService.GetAllAsync()).ToList();
+                
+            if(!users.Any())
             {
-                return Ok(users);
+                return users;
             }
-            else
-                return NotFound();
+            else return NotFound();
         }
 
         [HttpGet("/User/GetByLogin/{login}")]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsersByLogin(string login)
+        public ActionResult<IEnumerable<User>> GetUsersByLogin(string login)
         {
-            var users = await userService.GetUsersByLoginAsync(login);
-            if (users != null)
+            var users = userService.GetUsersByLoginAsync(login).ToList();
+            
+            if (users != null && !users.Any())
             {
-                return Ok(users);
+                return users;
             }
             else
                 return NotFound();
         }
 
         [HttpGet("/User/GetByEmail/{email}")]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsersByEmail(string email)
+        public  ActionResult<User> GetUserByEmail(string email)
         {
-            var users = await userService.GetUsersByEmailAsync(email);
+            var users =  userService.GetUserByEmailAsync(email);
             if (users != null)
             {
-                return users.ToList();
+                return users;
             }
-            else
-                return NotFound();
+            else return NotFound();
         }
 
         [HttpGet("/User/GetById/{id}")]

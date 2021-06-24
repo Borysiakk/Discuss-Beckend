@@ -68,14 +68,15 @@ namespace Discuss.Infrastructure.Services
             return users;
         }
 
-        public Task<IEnumerable<User>> GetUsersByLoginAsync(string login)
+        public User GetUserByEmailAsync(string email)
         {
-            throw new System.NotImplementedException();
+            return _dbContex.Users.FirstOrDefault(a => a.Email == email);
         }
 
-        public Task<IEnumerable<User>> GetUsersByEmailAsync(string email)
+        public IEnumerable<User> GetUsersByLoginAsync(string login)
         {
-            throw new System.NotImplementedException();
+            var users = _dbContex.Users.Where(a => a.Login.Contains(login));
+            return users;
         }
     }
 }

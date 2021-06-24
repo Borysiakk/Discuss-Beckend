@@ -12,11 +12,14 @@ namespace Discuss.Test
 {
     public class UnitTestUserController
     {
-        private ApplicationDbContext _dbContext;
-        private DbContextOptions<ApplicationDbContext> _dbContextOptions ;
+        private UserService _userService;
+        private UserController _userController;
+        private DbContextOptions<ApplicationDbContext> _dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "PrimeDb").Options;
 
         private void InitDbDData()
         {
+            using var dbContext = new ApplicationDbContext(_dbContextOptions);
             var users = new List<User>()
             {
                 new User{ Id = 0, Email = "1@gmail.com", HashPass = "1234", Login = "LoginA"},
@@ -24,34 +27,27 @@ namespace Discuss.Test
                 new User{ Id = 0, Email = "3@gmail.com", HashPass = "1234", Login = "LoginC"},
             };
             
-            _dbContext.AddRange(users);
-            _dbContext.SaveChanges();
+            dbContext.AddRange(users);
+            dbContext.SaveChanges();
         }
         
         [SetUp]
         public void Setup()
         {
-            _dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName: "Users").Options;
-            _dbContext = new ApplicationDbContext(_dbContextOptions);
+            _userService = new UserService(new ApplicationDbContext(_dbContextOptions));
+            _userController = new UserController(_userService);
             
             InitDbDData();
         }
-
-        [Test]
-        public void AddUser_OnAddUserIsCalled()
+        
+        [TestCase("1@gmail.com")]
+        [TestCase("2@gmail.com")]
+        [TestCase("3@gmail.com")]
+        public void GetUserByEmail_FindUserByEmail_User(string email)
         {
-            var userService = new UserService(_dbContext);
-            var controller = new  UserController(userService);
-        }
-
-        [Test]
-        public async Task GetUsers_OnGetUsersIsCalled()
-        {
-            var userService = new UserService(_dbContext);
-            var controller = new  UserController(userService);
-
-            var result = await controller.GetUsers();
+            var user = _userController.GetUserByEmail(email);
             
+            Assert.IsNotNull(user.Value);
         }
         
         

@@ -86,18 +86,28 @@ namespace Discuss.Domain
             return Users;
         }
 
-        public async Task<IEnumerable<User>> GetUsersByLoginAsync(string login)
+        public User GetUserByEmailAsync(string email)
         {
-            await Task.Delay(100);
-            logger.LogInformation("Users by login retrieved...");
-            return Users.FindAll(u => u.Email.Contains(login));
+            throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<User>> GetUsersByEmailAsync(string email)
+        public IEnumerable<User> GetUsersByLoginAsync(string login)
         {
-            await Task.Delay(100);
-            logger.LogInformation("Users by email retrieved...");
-            return Users.FindAll(u => u.Email.Contains(email));
+            throw new NotImplementedException();
         }
+
+        // public async Task<IEnumerable<User>> GetUsersByLoginAsync(string login)
+        // {
+        //     await Task.Delay(100);
+        //     logger.LogInformation("Users by login retrieved...");
+        //     return Users.FindAll(u => u.Email.Contains(login));
+        // }
+        //
+        // public async Task<IEnumerable<User>> GetUsersByEmailAsync(string email)
+        // {
+        //     await Task.Delay(100);
+        //     logger.LogInformation("Users by email retrieved...");
+        //     return Users.FindAll(u => u.Email.Contains(email));
+        // }
     }
 }
