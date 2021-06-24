@@ -25,7 +25,7 @@ namespace Discuss.Api.Controllers
         {
             var users = (await userService.GetAllAsync()).ToList();
                 
-            if(!users.Any())
+            if(users != null)
             {
                 return users;
             }
@@ -37,7 +37,7 @@ namespace Discuss.Api.Controllers
         {
             var users = await userService.GetUsersByLoginAsync(login);
             
-            if (users != null && !users.Any())
+            if (users != null)
             {
                 return users.ToList();
             }
@@ -74,7 +74,7 @@ namespace Discuss.Api.Controllers
             if (retUser == null)
                 return StatusCode(500, "Error during user adding.");
             else
-                return Ok(retUser);
+                return retUser;
         }
 
         [HttpPut("/User/Update")]
@@ -84,7 +84,7 @@ namespace Discuss.Api.Controllers
             if (retUser == null)
                 return StatusCode(500, "Error during user update.");
             else
-                return Ok(retUser);
+                return retUser;
         }
 
         [HttpDelete("/User/DeleteUser/{id}")]
@@ -94,7 +94,7 @@ namespace Discuss.Api.Controllers
             if (retUser == null)
                 return StatusCode(500, "Error during user delete.");
             else
-                return Ok(retUser);
+                return retUser;
         }
     }
 }

@@ -49,7 +49,24 @@ namespace Discuss.Test
             
             Assert.IsNotNull(user.Value);
         }
+
+        [TestCase("LoginA")]
+        [TestCase("Login")]
+        [TestCase("Log")]
+        public async Task GetUsersByLogin_User(string login)
+        {
+            var actionResult = await _userController.GetUsersByLogin(login);
+
+            //Assert.IsNotNull(actionResult.Value);
+            Assert.IsTrue(actionResult.Value.Count() > 0);
+        }
         
-        
+        [Test]
+        public async Task GetUsers_User()
+        {
+            var actionResult = await _userController.GetUsers();
+
+            Assert.IsNotNull(actionResult.Value);
+        }
     }
 }
