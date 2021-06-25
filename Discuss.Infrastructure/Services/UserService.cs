@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mime;
 using System.Threading.Tasks;
 using Discuss.Domain.Interfaces;
-using Discuss.Domain.Models;
+using Discuss.Domain.Models.Entities;
 using Discuss.Persistence;
 using Microsoft.EntityFrameworkCore;
 

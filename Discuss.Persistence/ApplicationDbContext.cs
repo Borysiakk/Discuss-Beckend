@@ -1,5 +1,6 @@
 using Discuss.Domain;
 using Discuss.Domain.Models;
+using Discuss.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discuss.Domain.Models;
+using Discuss.Domain.Models.Entities;
 
 namespace Discuss.Domain.Interfaces
 {

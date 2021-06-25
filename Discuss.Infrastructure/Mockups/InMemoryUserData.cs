@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Discuss.Domain.Interfaces;
 using Discuss.Domain.Models;
+using Discuss.Domain.Models.Entities;
 using Microsoft.Extensions.Logging;
 
 namespace Discuss.Domain
@@ -19,8 +20,8 @@ namespace Discuss.Domain
             this.logger = logger;
             Users = new List<User>()
             {
-                new User { Id = 1, Login = "jnowak", Email = "jnowak@test.pl", HashPass = "*******" },
-                new User { Id = 2, Login = "jkowalski", Email = "jkowalski@test.pl", HashPass = "***" }
+                new User { Id = 1, Login = "jnowak", Email = "jnowak@test.pl" },
+                new User { Id = 2, Login = "jkowalski", Email = "jkowalski@test.pl" }
             };
         }
 

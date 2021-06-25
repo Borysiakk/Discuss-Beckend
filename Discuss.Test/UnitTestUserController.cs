@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discuss.Api.Controllers;
 using Discuss.Domain.Models;
+using Discuss.Domain.Models.Entities;
 using Discuss.Infrastructure.Services;
 using Discuss.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -15,16 +16,16 @@ namespace Discuss.Test
         private UserService _userService;
         private UserController _userController;
         private DbContextOptions<ApplicationDbContext> _dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "PrimeDb").Options;
+                                                                           .UseInMemoryDatabase(databaseName: "PrimeDb").Options;
 
         private void InitDbDData()
         {
             using var dbContext = new ApplicationDbContext(_dbContextOptions);
             var users = new List<User>()
             {
-                new User{ Id = 0, Email = "1@gmail.com", HashPass = "1234", Login = "LoginA"},
-                new User{ Id = 0, Email = "2@gmail.com", HashPass = "1234", Login = "LoginB"},
-                new User{ Id = 0, Email = "3@gmail.com", HashPass = "1234", Login = "LoginC"},
+                new User{ Id = 0, Email = "1@gmail.com", Login = "LoginA"},
+                new User{ Id = 0, Email = "2@gmail.com", Login = "LoginB"},
+                new User{ Id = 0, Email = "3@gmail.com", Login = "LoginC"},
             };
             
             dbContext.AddRange(users);

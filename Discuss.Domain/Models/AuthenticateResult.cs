@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net;
+using Discuss.Domain.Models.Entities;
 
 namespace Discuss.Domain.Models
 {
-    public class AuthResult
+    public class AuthenticateResult
     {
         public string Token { get; set; }
         public User User { get; set; }
