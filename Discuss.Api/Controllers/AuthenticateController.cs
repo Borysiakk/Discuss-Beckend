@@ -13,58 +13,56 @@ namespace Discuss.Api.Controllers
     [Route("api/[controller]")]   
     public class AuthenticateController :ControllerBase
     {
-        private readonly ILogger<AuthenticateController> _logger;
         private readonly IAuthenticateService _authenticateService;
 
-        public AuthenticateController(IAuthenticateService authenticateService, ILogger<AuthenticateController> logger)
+        public AuthenticateController(IAuthenticateService authenticateService)
         {
-            _logger = logger;
             _authenticateService = authenticateService;
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult<AuthenticateResult>> Login(LoginModelView login)
+        public async Task<IActionResult> Login(LoginModelView login)
         {
             try
             {
                 var result = await _authenticateService.LoginAsync(login);
                 if (result.Succeeded)
                 {
-                    return result;
+                    return new OkObjectResult(result);
                 }
                 else
                 {
-                    return Unauthorized(result);
+                    return new UnauthorizedObjectResult(result);
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                _logger.Log(LogLevel.Warning, e,e.Message);
+                //_logger.Log(LogLevel.Warning, e,e.Message);
                 throw;
             }
         }
 
         [HttpPost("Register")]
-        public async Task<ActionResult<AuthenticateResult>> Register(RegisterViewModel register)
+        public async Task<IActionResult> Register(RegisterViewModel register)
         {
             try
             {
                 var result = await _authenticateService.RegisterAsync(register);
                 if (result.Succeeded)
                 {
-                    return result;
+                    return new CreatedResult("", result);
                 }
                 else
                 {
-                    return BadRequest(result.Errors);
+                    return new UnauthorizedObjectResult(result);
                 }
                 
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                _logger.Log(LogLevel.Warning, e,e.Message);
+                //_logger.Log(LogLevel.Warning, e,e.Message);
                 throw;
             }
         }
