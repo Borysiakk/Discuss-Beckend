@@ -14,7 +14,9 @@ namespace Discuss.Infrastructure
         {
             services.AddSingleton<ITokenService, JwtTokenService>();
             
+            
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthenticateService, AuthenticateService>();
             return services;
         }
         

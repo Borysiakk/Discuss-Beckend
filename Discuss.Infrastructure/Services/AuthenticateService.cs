@@ -23,9 +23,37 @@ namespace Discuss.Infrastructure.Services
             _tokenService = tokenService;
         }
 
-        public Task<AuthenticateResult> LoginAsync(LoginModelView loginModelView)
+        public async Task<AuthenticateResult> LoginAsync(LoginModelView loginModelView)
         {
-            throw new System.NotImplementedException();
+            var resultFindLogin = await _userService.GetUserByLoginAsync(loginModelView.Login);
+            if (resultFindLogin == null)
+            {
+                return new AuthenticateResult()
+                {
+                    Succeeded = false,
+                    Errors = new[] {"User not found"},
+                    StatusCode = HttpStatusCode.Unauthorized,
+                };
+            }
+
+            var resultCheckPassword = BC.Verify(loginModelView.Password, resultFindLogin.PasswordHash);
+            if (!resultCheckPassword)
+            {
+                return new AuthenticateResult()
+                {
+                    Succeeded = false,
+                    Errors = new[] {"User not found"},
+                    StatusCode = HttpStatusCode.Unauthorized,
+                };
+            }
+
+            return new AuthenticateResult()
+            {
+                Succeeded = true,
+                AuthDate = DateTime.Now,
+                StatusCode = HttpStatusCode.OK,
+                Token = _tokenService.Generate(resultFindLogin),
+            };
         }
 
         public async Task<AuthenticateResult> RegisterAsync(RegisterViewModel registerViewModel)
@@ -33,7 +61,7 @@ namespace Discuss.Infrastructure.Services
             User user = new User()
             {
                 Login = registerViewModel.Login,
-                Email = registerViewModel.Password,
+                Email = registerViewModel.Email,
             };
 
             var resultCreateUser = await _userService.CreateAsync(user, registerViewModel.Password);
@@ -41,6 +69,7 @@ namespace Discuss.Infrastructure.Services
             {
                 return new AuthenticateResult()
                 {
+                    Succeeded = false,
                     Errors = resultCreateUser.Errors,
                     StatusCode = resultCreateUser.StatusCode,
                 };
@@ -48,6 +77,7 @@ namespace Discuss.Infrastructure.Services
 
             return new AuthenticateResult()
             {
+                Succeeded = true,
                 AuthDate = DateTime.Now,
                 StatusCode = resultCreateUser.StatusCode,
                 Token = _tokenService.Generate(resultCreateUser.User),

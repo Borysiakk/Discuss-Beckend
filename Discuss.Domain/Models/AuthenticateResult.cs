@@ -13,6 +13,7 @@ namespace Discuss.Domain.Models
     {
         public string Token { get; set; }
         //public User User { get; set; }
+        public bool Succeeded { get; set; }
         public DateTime AuthDate { get; set; }
         public HttpStatusCode StatusCode { get; set; }
         public IEnumerable<string> Errors { get; set; }

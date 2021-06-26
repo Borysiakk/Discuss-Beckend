@@ -29,9 +29,11 @@ namespace Discuss.Api
         public void ConfigureServices(IServiceCollection services)
         {
             //services.ConfigureUserService();
+            
             services.AddControllers();
             services.AddInfrastructure();
             services.AddPersistence();
+            services.AddServiceToken(Configuration);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Discuss.Api", Version = "v1"});

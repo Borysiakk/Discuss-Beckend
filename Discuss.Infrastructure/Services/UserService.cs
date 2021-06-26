@@ -105,9 +105,9 @@ namespace Discuss.Infrastructure.Services
             return await _dbContex.Users.FirstOrDefaultAsync(a => a.Email == email);
         }
 
-        public Task<User> GetUserByLoginAsync(string login)
+        public async Task<User> GetUserByLoginAsync(string login)
         {
-            throw new System.NotImplementedException();
+            return await _dbContex.Users.FirstOrDefaultAsync(a => a.Login == login);
         }
 
         public async Task<IEnumerable<User>> GetUsersByLoginAsync(string login)
