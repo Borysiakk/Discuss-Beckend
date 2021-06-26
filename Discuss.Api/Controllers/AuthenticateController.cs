@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Discuss.Api.Controllers
 {
-    public class AuthenticateController : ControllerBase
+    [ApiController]
+    [Route("api/[controller]")]   
+    public class AuthenticateController :ControllerBase
     {
-
+        
     }
 }

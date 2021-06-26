@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Discuss.Domain.Interfaces;
+using Discuss.Domain.Models.Contract.Result;
 using Discuss.Domain.Models.Entities;
 using Discuss.Persistence;
 using Microsoft.EntityFrameworkCore;
+using BC = BCrypt.Net.BCrypt;
 
 namespace Discuss.Infrastructure.Services
 {
@@ -27,12 +30,42 @@ namespace Discuss.Infrastructure.Services
             return _dbContex.Users.FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public async Task<User> AddAsync(User user)
+        public async Task<IdentityResult> CreateAsync(User user,string password)
         {
-            var result = await _dbContex.Users.AddAsync(user);
+            var resultEmail = await GetUserByEmailAsync(user.Email);
+            if (resultEmail != null)
+            {
+                return new IdentityResult()
+                {
+                    Succeeded = false,
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Errors = new [] {"There is already an account registered to this email"},
+                };
+            }
+
+            var resultLogin = await GetUserByLoginAsync(user.Login);
+            if (resultLogin != null)
+            {
+                return new IdentityResult()
+                {
+                    Succeeded = false,
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Errors = new[] {"There is already an account registered to this login"}
+                };
+            }
+
+            user.PasswordSalt = BC.GenerateSalt();
+            user.PasswordHash = BC.HashPassword(password, user.PasswordSalt);
+            
+            var resultUser = await _dbContex.Users.AddAsync(user);
             await _dbContex.SaveChangesAsync();
 
-            return result.Entity;
+            return new IdentityResult()
+            {
+                Succeeded = true,
+                User = resultUser.Entity,
+                StatusCode = HttpStatusCode.Created,
+            };
         }
 
         public async Task<User> DeleteAsync(long id)
@@ -70,6 +103,11 @@ namespace Discuss.Infrastructure.Services
         public async Task<User> GetUserByEmailAsync(string email)
         {
             return await _dbContex.Users.FirstOrDefaultAsync(a => a.Email == email);
+        }
+
+        public Task<User> GetUserByLoginAsync(string login)
+        {
+            throw new System.NotImplementedException();
         }
 
         public async Task<IEnumerable<User>> GetUsersByLoginAsync(string login)

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Discuss.Domain.Interfaces;
 using Discuss.Domain.Models;
+using Discuss.Domain.Models.Contract.Result;
 using Discuss.Domain.Models.Entities;
 using Microsoft.Extensions.Logging;
 
@@ -36,15 +37,15 @@ namespace Discuss.Domain
             return Users.Find(u => u.Id == id);
         }
 
-        public async Task<User> AddAsync(User user)
-        {
-            await Task.Delay(100);
-            long currentId = Users.Max(u => u.Id);
-            user.Id = currentId + 1;
-            Users.Add(user);
-            logger.LogInformation($"User {user.Id} was added...");
-            return user;
-        }
+        // public async Task<IdentityResult> CreateAsync(User user,string password)
+        // {
+        //     await Task.Delay(100);
+        //     long currentId = Users.Max(u => u.Id);
+        //     user.Id = currentId + 1;
+        //     Users.Add(user);
+        //     logger.LogInformation($"User {user.Id} was added...");
+        //     return user;
+        // }
 
         public async Task<User> DeleteAsync(long id)
         {
@@ -80,6 +81,11 @@ namespace Discuss.Domain
             }
         }
 
+        public Task<IdentityResult> CreateAsync(User user, string password)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<User>> GetAllAsync()
         {
             await Task.Delay(100);
@@ -92,6 +98,11 @@ namespace Discuss.Domain
             await Task.Delay(100);
             logger.LogInformation("Users by email retrieved...");
             return Users.FirstOrDefault(u=>u.Email==email);
+        }
+
+        public Task<User> GetUserByLoginAsync(string login)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<User>> GetUsersByLoginAsync(string login)

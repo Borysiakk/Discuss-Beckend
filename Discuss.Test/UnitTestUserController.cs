@@ -15,8 +15,7 @@ namespace Discuss.Test
     {
         private UserService _userService;
         private UserController _userController;
-        private DbContextOptions<ApplicationDbContext> _dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-                                                                           .UseInMemoryDatabase(databaseName: "PrimeDb").Options;
+        private DbContextOptions<ApplicationDbContext> _dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName: "PrimeDb").Options;
 
         private void InitDbDData()
         {
@@ -59,6 +58,7 @@ namespace Discuss.Test
             var actionResult = await _userController.GetUsersByLogin(login);
 
             //Assert.IsNotNull(actionResult.Value);
+            //Assert.IsTrue(actionResult.Value.Any());
             Assert.IsTrue(actionResult.Value.Count() > 0);
         }
         

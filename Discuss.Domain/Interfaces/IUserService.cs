@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discuss.Domain.Models;
+using Discuss.Domain.Models.Contract.Result;
 using Discuss.Domain.Models.Entities;
 
 namespace Discuss.Domain.Interfaces
@@ -12,11 +13,12 @@ namespace Discuss.Domain.Interfaces
     {
         int GetUsersCount();
         Task<User> GetByIdAsync(long id);
-        Task<User> AddAsync(User user);
         Task<User> DeleteAsync(long id);
         Task<User> UpdateAsync(User user);
+        Task<IdentityResult> CreateAsync(User user,string password);
         Task<IEnumerable<User>> GetAllAsync();
         Task<User> GetUserByEmailAsync(string email);
+        Task<User> GetUserByLoginAsync(string login);
         Task<IEnumerable<User>> GetUsersByLoginAsync(string login);
     }
 }

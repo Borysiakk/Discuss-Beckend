@@ -68,15 +68,16 @@ namespace Discuss.Api.Controllers
             return Ok(user);
         }
 
-        [HttpPost("/User/Add")]
-        public async Task<ActionResult<User>>AddUser(User user)
-        {
-            var retUser = await userService.AddAsync(user);
-            if (retUser == null)
-                return StatusCode(500, "Error during user adding.");
-            else
-                return retUser;
-        }
+        // [HttpPost("/User/Add")]
+        // public async Task<ActionResult<User>>AddUser(User user)
+        // {
+        //     //dodać dodawanie hasła
+        //     var retUser = await userService.CreateAsync(user,"");
+        //     if (retUser == null)
+        //         return StatusCode(500, "Error during user adding.");
+        //     else
+        //         return retUser;
+        // }
 
         [HttpPut("/User/Update")]
         public async Task<ActionResult<User>>UpdateUser(User user)
