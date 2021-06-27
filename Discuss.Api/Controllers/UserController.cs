@@ -21,51 +21,51 @@ namespace Discuss.Api.Controllers
             this.userService = userService;
         }
 
-        [HttpGet("/User/GetAll")]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetUsers()
         {
-            var users = (await userService.GetAllAsync()).ToList();
+            var users = await userService.GetAllAsync();
                 
             if(users != null)
             {
-                return users;
+                return new OkObjectResult(users);
             }
-            else return NotFound();
+            else return new EmptyResult();
         }
 
-        [HttpGet("/User/GetByLogin/{login}")]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsersByLogin(string login)
+        [HttpGet("GetByLogin/{login}")]
+        public async Task<IActionResult> GetUsersByLogin(string login)
         {
             var users = await userService.GetUsersByLoginAsync(login);
             
             if (users != null)
             {
-                return users.ToList();
+                return new OkObjectResult(users);
             }
             else
                 return NotFound();
         }
 
-        [HttpGet("/User/GetByEmail/{email}")]
-        public async Task<ActionResult<User>> GetUserByEmail(string email)
+        [HttpGet("GetByEmail/{email}")]
+        public async Task<IActionResult> GetUserByEmail(string email)
         {
-            var users =  await userService.GetUserByEmailAsync(email);
-            if (users != null)
+            var user =  await userService.GetUserByEmailAsync(email);
+            if (user != null)
             {
-                return users;
+                return new OkObjectResult(user);
             }
             else return NotFound();
         }
 
-        [HttpGet("/User/GetById/{id}")]
-        public async Task<ActionResult<User>> GetUserById(long id)
+        [HttpGet("GetById/{id}")]
+        public async Task<IActionResult> GetUserById(long id)
         {
             var user = await userService.GetByIdAsync(id);
             if(user == null)
             {
                 return NotFound();
             }
-            return Ok(user);
+            return new OkObjectResult(user);
         }
 
         // [HttpPost("/User/Add")]
@@ -79,24 +79,24 @@ namespace Discuss.Api.Controllers
         //         return retUser;
         // }
 
-        [HttpPut("/User/Update")]
-        public async Task<ActionResult<User>>UpdateUser(User user)
+        [HttpPut("Update")]
+        public async Task<IActionResult>UpdateUser(User user)
         {
             var retUser = await userService.UpdateAsync(user);
             if (retUser == null)
                 return StatusCode(500, "Error during user update.");
             else
-                return retUser;
+                return new OkObjectResult(retUser);
         }
 
-        [HttpDelete("/User/DeleteUser/{id}")]
-        public async Task<ActionResult<User>>DeleteUser(long id)
+        [HttpDelete("Delete/{id}")]
+        public async Task<IActionResult>DeleteUser(long id)
         {
             var retUser = await userService.DeleteAsync(id);
             if (retUser == null)
                 return StatusCode(500, "Error during user delete.");
             else
-                return retUser;
+                return new OkObjectResult(retUser);
         }
     }
 }

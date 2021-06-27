@@ -6,6 +6,8 @@ using Discuss.Domain.Models;
 using Discuss.Domain.Models.Entities;
 using Discuss.Infrastructure.Services;
 using Discuss.Persistence;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
@@ -46,8 +48,12 @@ namespace Discuss.Test
         public async Task GetUserByEmail_FindUserByEmail_User(string email)
         {
             var user = await _userController.GetUserByEmail(email);
-            
-            Assert.IsNotNull(user.Value);
+            var okResult = user as ObjectResult;
+
+            Assert.IsNotNull(okResult);
+            Assert.True(okResult is OkObjectResult);
+            Assert.IsInstanceOf<User>(okResult.Value);
+            Assert.AreEqual(StatusCodes.Status200OK, okResult.StatusCode);
         }
 
         [TestCase("LoginA")]
@@ -56,18 +62,26 @@ namespace Discuss.Test
         public async Task GetUsersByLogin_User(string login)
         {
             var actionResult = await _userController.GetUsersByLogin(login);
+            var okResult = actionResult as ObjectResult;
 
-            //Assert.IsNotNull(actionResult.Value);
-            //Assert.IsTrue(actionResult.Value.Any());
-            Assert.IsTrue(actionResult.Value.Count() > 0);
+            Assert.IsNotNull(okResult);
+            Assert.True(okResult is OkObjectResult);
+            Assert.IsInstanceOf<IEnumerable<User>>(okResult.Value);
+            Assert.AreEqual(StatusCodes.Status200OK, okResult.StatusCode);
+            Assert.IsTrue((okResult.Value as IEnumerable<User>).Count() > 0);
         }
         
         [Test]
         public async Task GetUsers_User()
         {
             var actionResult = await _userController.GetUsers();
+            var okResult = actionResult as ObjectResult;
 
-            Assert.IsNotNull(actionResult.Value);
+            Assert.IsNotNull(okResult);
+            Assert.True(okResult is OkObjectResult);
+            Assert.IsInstanceOf<IEnumerable<User>>(okResult.Value);
+            Assert.AreEqual(StatusCodes.Status200OK, okResult.StatusCode);
+            Assert.IsTrue((okResult.Value as IEnumerable<User>).Count() > 0);
         }
     }
 }
