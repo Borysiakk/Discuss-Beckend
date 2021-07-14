@@ -50,6 +50,12 @@ namespace Discuss.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Discuss.Api v1"));
             }
 
+            app.UseCors(x => x
+           .AllowAnyMethod()
+           .AllowAnyHeader()
+           .SetIsOriginAllowed(origin => true)
+           .AllowCredentials());
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
