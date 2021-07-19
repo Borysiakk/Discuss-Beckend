@@ -83,5 +83,19 @@ namespace Discuss.Test
             Assert.AreEqual(StatusCodes.Status200OK, okResult.StatusCode);
             Assert.IsTrue((okResult.Value as IEnumerable<User>).Count() > 0);
         }
+
+        [TestCase(2)]
+        [TestCase("0")]
+        [TestCase("uu")]
+        [TestCase("256689233")]
+        public async Task DeleteUser_User(long id)
+        {
+            var actionResult = await _userController.DeleteUser(id);
+            var okResult = actionResult as ObjectResult;
+
+            Assert.IsNotNull(okResult);
+            Assert.True(okResult is OkObjectResult);
+            Assert.AreEqual(StatusCodes.Status200OK, okResult.StatusCode);
+        }
     }
 }
