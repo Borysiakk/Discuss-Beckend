@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discuss.Infrastructure;
 using Discuss.Persistence;
+using Discuss.SignalR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,6 +35,7 @@ namespace Discuss.Api
             services.AddInfrastructure();
             services.AddPersistence();
             services.AddServiceToken(Configuration);
+            services.AddSignalRHubs();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Discuss.Api", Version = "v1"});
@@ -63,6 +65,7 @@ namespace Discuss.Api
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseSignalR();
         }
     }
 }

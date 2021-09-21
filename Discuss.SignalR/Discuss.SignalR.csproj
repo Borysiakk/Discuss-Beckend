@@ -4,4 +4,12 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <FrameworkReference Include="Microsoft.AspNetCore.App" Version="5.0.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="5.0.10" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    </ItemGroup>
+
 </Project>

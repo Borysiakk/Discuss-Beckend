@@ -15,6 +15,7 @@
       <ProjectReference Include="..\Discuss.Domain\Discuss.Domain.csproj" />
       <ProjectReference Include="..\Discuss.Infrastructure\Discuss.Infrastructure.csproj" />
       <ProjectReference Include="..\Discuss.Persistence\Discuss.Persistence.csproj" />
+      <ProjectReference Include="..\Discuss.SignalR\Discuss.SignalR.csproj" />
     </ItemGroup>
 
     <ItemGroup>
