@@ -13,21 +13,21 @@ namespace Discuss.Infrastructure.Services
 {
     public class UserService :IUserService
     {
-        private readonly ApplicationDbContext _dbContex;
+        private readonly ApplicationDbContext _dbContext;
 
-        public UserService(ApplicationDbContext dbContex)
+        public UserService(ApplicationDbContext dbContext)
         {
-            _dbContex = dbContex;
+            _dbContext = dbContext;
         }
 
         public int GetUsersCount()
         {
-            return _dbContex.Users.Count();
+            return _dbContext.Users.Count();
         }
 
         public Task<User> GetByIdAsync(long id)
         {
-            return _dbContex.Users.FirstOrDefaultAsync(a => a.Id == id);
+            return _dbContext.Users.FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<IdentityResult> CreateAsync(User user,string password)
@@ -57,8 +57,8 @@ namespace Discuss.Infrastructure.Services
             user.PasswordSalt = BC.GenerateSalt();
             user.PasswordHash = BC.HashPassword(password, user.PasswordSalt);
             
-            var resultUser = await _dbContex.Users.AddAsync(user);
-            await _dbContex.SaveChangesAsync();
+            var resultUser = await _dbContext.Users.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
 
             return new IdentityResult()
             {
@@ -70,49 +70,49 @@ namespace Discuss.Infrastructure.Services
 
         public async Task<User> DeleteAsync(long id)
         {
-            var user = _dbContex.Users.FirstOrDefault(a => a.Id == id);
+            var user = _dbContext.Users.FirstOrDefault(a => a.Id == id);
             if (user == null)
             {
                 return null;
             }
 
-            _dbContex.Users.Remove(user);
-            await _dbContex.SaveChangesAsync();
+            _dbContext.Users.Remove(user);
+            await _dbContext.SaveChangesAsync();
             
             return user;
         }
 
         public async Task<User> UpdateAsync(User user)
         {
-            if (await _dbContex.Users.FirstOrDefaultAsync(a => a.Id == user.Id) == null)
+            if (await _dbContext.Users.FirstOrDefaultAsync(a => a.Id == user.Id) == null)
             {
                 return null;
             }
-            _dbContex.Users.Update(user);
-            await _dbContex.SaveChangesAsync();
+            _dbContext.Users.Update(user);
+            await _dbContext.SaveChangesAsync();
 
             return user;
         }
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            var users = await _dbContex.Users.ToListAsync();
+            var users = await _dbContext.Users.ToListAsync();
             return users;
         }
 
         public async Task<User> GetUserByEmailAsync(string email)
         {
-            return await _dbContex.Users.FirstOrDefaultAsync(a => a.Email == email);
+            return await _dbContext.Users.FirstOrDefaultAsync(a => a.Email == email);
         }
 
         public async Task<User> GetUserByLoginAsync(string login)
         {
-            return await _dbContex.Users.FirstOrDefaultAsync(a => a.Login == login);
+            return await _dbContext.Users.FirstOrDefaultAsync(a => a.Login == login);
         }
 
         public async Task<IEnumerable<User>> GetUsersByLoginAsync(string login)
         {
-            var users = await _dbContex.Users.Where(a => a.Login.Contains(login)).ToListAsync();
+            var users = await _dbContext.Users.Where(a => a.Login.Contains(login)).ToListAsync();
             return users.AsEnumerable<User>();
         }
     }
