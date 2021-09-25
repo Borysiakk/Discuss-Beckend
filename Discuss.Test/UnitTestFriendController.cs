@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Discuss.Domain.Models.Contract.Result;
 using Discuss.Domain.Models.Entities;
 using Discuss.Infrastructure.Services;
 using Discuss.Persistence;
@@ -24,6 +25,8 @@ namespace Discuss.Test
                 new User{ Id = "0", Email = "1@gmail.com", Login = "LoginA", Status = true},
                 new User{ Id = "1", Email = "2@gmail.com", Login = "LoginB", Status = false},
                 new User{ Id = "2", Email = "3@gmail.com", Login = "LoginC", Status = false},
+                new User{ Id = "3", Email = "3@gmail.com", Login = "LoginC", Status = false},
+                new User{ Id = "4", Email = "3@gmail.com", Login = "LoginC", Status = false},
             };
 
             var friends = new List<Friend>()
@@ -95,6 +98,28 @@ namespace Discuss.Test
             
             Assert.AreEqual(usersId,friendly);
 
+        }
+        
+        [TestCase("3","4")]
+        [TestCase("4","3")]
+        public async Task AddFriend_Add_FriendResult(string userId, string friendId)
+        {
+            var resultAddFriend = await _friendService.Add(userId, friendId);
+            
+            Assert.NotNull(resultAddFriend,"users is null");
+            Assert.IsInstanceOf<FriendResult>(resultAddFriend);
+            Assert.True(resultAddFriend.Succeeded);
+        }
+        
+        [TestCase("0","1")]
+        [TestCase("2","1")]
+        public async Task AddExistingFriend_Add_FriendResult(string userId, string friendId)
+        {
+            var resultAddFriend = await _friendService.Add(userId, friendId);
+            
+            Assert.NotNull(resultAddFriend,"users is null");
+            Assert.IsInstanceOf<FriendResult>(resultAddFriend);
+            Assert.False(resultAddFriend.Succeeded);
         }
     }
 }

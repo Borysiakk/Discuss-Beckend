@@ -1,9 +1,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Discuss.Domain.Interfaces;
+using Discuss.Domain.Models.Contract.Result;
 using Discuss.Domain.Models.Entities;
 using Discuss.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Discuss.Infrastructure.Services
 {
@@ -16,15 +19,41 @@ namespace Discuss.Infrastructure.Services
             _dbContext = dbContext;
         }
 
+
+        public async Task<FriendResult> Add(string userId, string friendId)
+        {
+            var friends = _dbContext.Friends.Where(a => a.UserId == userId);
+            if (friends.Any())
+            {
+                var isFriend = await friends.FirstOrDefaultAsync(a => a.FriendlyId == friendId);
+                if (isFriend != null)
+                {
+                    return new FriendResult()
+                    {
+                        Succeeded = false,
+                        Errors = new[] { "You have this friend in friends " }
+                    };
+                }
+            }
+
+            Friend friend = new Friend()
+            {
+                UserId = userId,
+                FriendlyId = friendId
+            };
+
+            await _dbContext.Friends.AddAsync(friend);
+            await _dbContext.SaveChangesAsync();
+
+            return new FriendResult()
+            {
+                Succeeded = true,
+            };
+        }
+
         public IEnumerable<User> GetFriends(string userId)
         {
-            return _dbContext.Friends.Where(a=>a.UserId == userId).Select(i => new User()
-            {
-                Id = i.Friendly.Id,
-                Email = i.Friendly.Email,
-                Login = i.Friendly.Login,
-                Status = i.Friendly.Status,
-            });
+            return _dbContext.Friends.Where(a => a.UserId == userId).Select(i => i.Friendly);
         }
 
         public Dictionary<string, bool> GetFriendsWithStatus(string userId)
