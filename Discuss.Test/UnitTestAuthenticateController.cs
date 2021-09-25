@@ -15,22 +15,23 @@ using NUnit.Framework;
 
 namespace Discuss.Test
 {
+    [TestFixture]
     public class UnitTestAuthenticateController
     {
         private UserService _userService;
         private JwtTokenService _jwtTokenService;
         private AuthenticateService _authenticateService;
         private AuthenticateController _authenticateController;
-        private DbContextOptions<ApplicationDbContext> _dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName: "PrimeDb").Options;
+        private DbContextOptions<ApplicationDbContext> _dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName: "UnitTestAuthenticateController").Options;
 
         private void InitDb()
         {
             using var dbContext = new ApplicationDbContext(_dbContextOptions);
             var users = new List<User>()
             {
-                new User{  Email = "1@gmail.com", Login = "loginA", PasswordSalt = "$2a$11$yhL3EIw5oIs2TlIypUNbRe", PasswordHash = "$2a$11$RSoUXc3Ux6h0ne9gTvvoEOQ7eyBZrrKVjgJZ4GCvQJHlex.hzyogS"},
-                new User{  Email = "2@gmail.com", Login = "loginB", PasswordSalt = "$2a$11$5DeopQxewvwvLJh3j8w8LO", PasswordHash = "$2a$11$5DeopQxewvwvLJh3j8w8LOV8BcjYzAR5XLYhvrLfAdPvDX7nFAyrm"},
-                new User{  Email = "3@gmail.com", Login = "LoginC", PasswordSalt = "$2a$11$N7/IguGspopsbCwR6t6HI.", PasswordHash = "$2a$11$N7/IguGspopsbCwR6t6HI.Ebk/2kkiq.cvhNYwVlhL/RnXwEz0LU6"},
+                new User{  Id = "0",Email = "1@gmail.com", Login = "loginA", PasswordSalt = "$2a$11$yhL3EIw5oIs2TlIypUNbRe", PasswordHash = "$2a$11$RSoUXc3Ux6h0ne9gTvvoEOQ7eyBZrrKVjgJZ4GCvQJHlex.hzyogS"},
+                new User{  Id = "1",Email = "2@gmail.com", Login = "loginB", PasswordSalt = "$2a$11$5DeopQxewvwvLJh3j8w8LO", PasswordHash = "$2a$11$5DeopQxewvwvLJh3j8w8LOV8BcjYzAR5XLYhvrLfAdPvDX7nFAyrm"},
+                new User{  Id = "2",Email = "3@gmail.com", Login = "LoginC", PasswordSalt = "$2a$11$N7/IguGspopsbCwR6t6HI.", PasswordHash = "$2a$11$N7/IguGspopsbCwR6t6HI.Ebk/2kkiq.cvhNYwVlhL/RnXwEz0LU6"},
             };
             
             dbContext.AddRange(users);
@@ -43,7 +44,7 @@ namespace Discuss.Test
             return config;
         }
         
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             var configuration = InitConfiguration();
