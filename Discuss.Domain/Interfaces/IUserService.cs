@@ -12,8 +12,8 @@ namespace Discuss.Domain.Interfaces
     public interface IUserService
     {
         int GetUsersCount();
-        Task<User> GetByIdAsync(long id);
-        Task<User> DeleteAsync(long id);
+        Task<User> GetByIdAsync(string id);
+        Task<User> DeleteAsync(string id);
         Task<User> UpdateAsync(User user);
         Task<IdentityResult> CreateAsync(User user,string password);
         Task<IEnumerable<User>> GetAllAsync();

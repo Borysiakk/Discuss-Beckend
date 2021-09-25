@@ -5,7 +5,7 @@ namespace Discuss.Domain.Interfaces
 {
     public interface IFriendService
     {
-        IEnumerable<string> GetFriends(string userId);
+        IEnumerable<User> GetFriends(string userId);
         Dictionary<string,bool> GetFriendsWithStatus(string userId);
     }
 }

@@ -58,7 +58,7 @@ namespace Discuss.Api.Controllers
         }
 
         [HttpGet("GetById/{id}")]
-        public async Task<IActionResult> GetUserById(long id)
+        public async Task<IActionResult> GetUserById(string id)
         {
             var user = await userService.GetByIdAsync(id);
             if(user == null)
@@ -90,7 +90,7 @@ namespace Discuss.Api.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult>DeleteUser(long id)
+        public async Task<IActionResult>DeleteUser(string id)
         {
             var retUser = await userService.DeleteAsync(id);
             if (retUser == null)

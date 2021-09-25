@@ -25,7 +25,7 @@ namespace Discuss.Infrastructure.Services
             return _dbContext.Users.Count();
         }
 
-        public Task<User> GetByIdAsync(long id)
+        public Task<User> GetByIdAsync(string id)
         {
             return _dbContext.Users.FirstOrDefaultAsync(a => a.Id == id);
         }
@@ -68,7 +68,7 @@ namespace Discuss.Infrastructure.Services
             };
         }
 
-        public async Task<User> DeleteAsync(long id)
+        public async Task<User> DeleteAsync(string id)
         {
             var user = _dbContext.Users.FirstOrDefault(a => a.Id == id);
             if (user == null)
