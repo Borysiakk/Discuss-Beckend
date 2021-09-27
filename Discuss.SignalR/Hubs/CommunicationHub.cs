@@ -33,8 +33,15 @@ namespace Discuss.SignalR.Hubs
 
         public async Task SendMessage(MessageData messageData)
         {
-            string msgInfo = $"{messageData?.Date.ToString("yyyy-MM-dd hh:mm:ss")} {messageData?.Login}: {messageData.Message}";
-            await Clients.All.SendAsync("BroadcastMessage", msgInfo);
+            try
+            {
+                string msgInfo = $"{messageData?.Date.ToString("yyyy-MM-dd hh:mm:ss")} {messageData?.Login}: {messageData.Message}";
+                await Clients.All.SendAsync("BroadcastMessage", msgInfo);
+            }
+            catch(Exception ex)
+            {
+                logger.LogError($"Error occured: {ex.Message}");
+            }
         }
     }
 }
