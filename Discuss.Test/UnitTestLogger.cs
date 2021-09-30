@@ -30,7 +30,7 @@ namespace Discuss.Test
         public async Task LogErrorMessage(string info)
         {
             var msg = new MessageData() { Date = DateTime.Now, Message = "Test", DestinationClientId="cl1", SendingClientId="cl2", MessageId="000-000-000" };
-            await _hub.ClientSendMessage(msg);
+            await _hub.SendMessageToClient(msg);
 
             _loggerMock.Verify(
                 m => m.Log(LogLevel.Error,

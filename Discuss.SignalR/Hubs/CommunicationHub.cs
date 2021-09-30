@@ -33,13 +33,13 @@ namespace Discuss.SignalR.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task ClientSendMessage(MessageData messageData)
+        public async Task SendMessageToClient(MessageData messageData)
         {
             try
             {
                 string msgInfo = $"{messageData?.Date.ToString("yyyy-MM-dd hh:mm:ss")} {messageData?.SendingClientId}: {messageData.Message}";
                 logger.LogInformation(msgInfo);
-                await Clients.All.RecieveMessageFromServer(messageData);
+                await Clients.All.ReceiveMessageFromServer(messageData);
             }
             catch (Exception ex)
             {
@@ -47,13 +47,13 @@ namespace Discuss.SignalR.Hubs
             }
         }
 
-        public async Task ClientSendNotify(string destinationClientId, string messageId)
+        public async Task SendNotifyMessageToClient(string destinationClientId, string messageId)
         {
             try
             {
                 string notifyInfo = $"Sending notify to client {destinationClientId} about message id: {messageId}.";
                 logger.LogInformation(notifyInfo);
-                await Clients.Client(destinationClientId).RecieveNotifyFromServer(destinationClientId, messageId);
+                await Clients.Client(destinationClientId).ReceiveNotifyFromServer(destinationClientId, messageId);
             }
             catch (Exception ex)
             {

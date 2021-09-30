@@ -9,8 +9,8 @@ namespace Discuss.SignalR.Interface
 {
     public interface IChatHub
     {
-        Task RecieveMessageFromServer(MessageData messageData);
+        Task ReceiveMessageFromServer(MessageData messageData);
 
-        Task RecieveNotifyFromServer(string destinationClientId, string messageId);
+        Task ReceiveNotifyFromServer(string destinationClientId, string messageId);
     }
 }
