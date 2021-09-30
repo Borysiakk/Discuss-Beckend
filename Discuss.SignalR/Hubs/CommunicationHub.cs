@@ -6,10 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discuss.Domain.Models.Entities;
+using Discuss.SignalR.Models;
+using Discuss.SignalR.Interface;
 
 namespace Discuss.SignalR.Hubs
 {
-    public class CommunicationHub: Hub
+    public class CommunicationHub: Hub<IClientHub>
     {
         private ILogger<CommunicationHub> logger;
         public CommunicationHub(ILogger<CommunicationHub>logger)
@@ -17,30 +19,45 @@ namespace Discuss.SignalR.Hubs
             this.logger = logger;
         }
 
-        public override Task OnConnectedAsync()
+        public override async Task OnConnectedAsync()
         {
             var host = Context.GetHttpContext().Request.Headers["Origin"];
             logger.LogInformation($"{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")} Host {host} dołączył do rozmowy.");
-            return base.OnConnectedAsync();
+            await base.OnConnectedAsync();
         }
 
-        public override Task OnDisconnectedAsync(Exception exception)
+        public override async Task OnDisconnectedAsync(Exception exception)
         {
             var host = Context.GetHttpContext().Request.Headers["Origin"];
             logger.LogInformation($"{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")} Host {host} rozłączył się.");
-            return base.OnDisconnectedAsync(exception);
+            await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task SendMessage(MessageData messageData)
+        public async Task ClientSendMessage(MessageData messageData)
         {
             try
             {
-                string msgInfo = $"{messageData?.Date.ToString("yyyy-MM-dd hh:mm:ss")} {messageData?.Login}: {messageData.Message}";
-                await Clients.All.SendAsync("BroadcastMessage", msgInfo);
+                string msgInfo = $"{messageData?.Date.ToString("yyyy-MM-dd hh:mm:ss")} {messageData?.SendingClientId}: {messageData.Message}";
+                logger.LogInformation(msgInfo);
+                await Clients.All.RecieveMessageFromServer(messageData);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.LogError($"Error occured: {ex.Message}");
+            }
+        }
+
+        public async Task ClientSendNotify(string destinationClientId, string messageId)
+        {
+            try
+            {
+                string notifyInfo = $"Sending notify to client {destinationClientId} about message id: {messageId}.";
+                logger.LogInformation(notifyInfo);
+                await Clients.Client(destinationClientId).RecieveNotifyFromServer(destinationClientId, messageId);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error occured: { ex.Message}");
             }
         }
     }

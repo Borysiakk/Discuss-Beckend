@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Discuss.Domain.Models.Entities;
+using Discuss.SignalR.Models;
 
 namespace Discuss.Test
 {
@@ -29,8 +29,8 @@ namespace Discuss.Test
         [TestCase("1 Test run")]
         public async Task LogErrorMessage(string info)
         {
-            var msg = new MessageData() { Date = DateTime.Now, Login = "jkowalski", Message = "Test", Send = true };
-            await _hub.SendMessage(msg);
+            var msg = new MessageData() { Date = DateTime.Now, Message = "Test", DestinationClientId="cl1", SendingClientId="cl2", MessageId="000-000-000" };
+            await _hub.ClientSendMessage(msg);
 
             _loggerMock.Verify(
                 m => m.Log(LogLevel.Error,
