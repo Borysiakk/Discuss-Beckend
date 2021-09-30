@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Discuss.Api.Controllers;
 using Discuss.Domain.Models.Contract.Result;
 using Discuss.Domain.Models.Entities;
 using Discuss.Infrastructure.Services;
 using Discuss.Persistence;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
@@ -14,6 +17,7 @@ namespace Discuss.Test
     public class UnitTestFriendController
     {
         private FriendService _friendService;
+        private FriendController _friendController;
         private Dictionary<string, IEnumerable<string>> _friendly;
         private DbContextOptions<ApplicationDbContext> _dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName: "UnitTestFriendController").Options;
         
@@ -54,6 +58,7 @@ namespace Discuss.Test
         public void Setup()
         {
             _friendService = new FriendService(new ApplicationDbContext(_dbContextOptions));
+            _friendController = new FriendController(_friendService);
             
             InitDb();
         }
@@ -104,22 +109,26 @@ namespace Discuss.Test
         [TestCase("4","3")]
         public async Task AddFriend_Add_FriendResult(string userId, string friendId)
         {
-            var resultAddFriend = await _friendService.Add(userId, friendId);
-            
-            Assert.NotNull(resultAddFriend,"users is null");
-            Assert.IsInstanceOf<FriendResult>(resultAddFriend);
-            Assert.True(resultAddFriend.Succeeded);
+            var actionResultAddFriend = await _friendController.Add(userId, friendId);
+            var okResultAddFriend = actionResultAddFriend as ObjectResult;
+
+            Assert.NotNull(okResultAddFriend);
+            Assert.True(okResultAddFriend is OkObjectResult);
+            Assert.IsInstanceOf<Result>(okResultAddFriend.Value);
+            Assert.AreEqual(StatusCodes.Status200OK, okResultAddFriend.StatusCode);
         }
         
         [TestCase("0","1")]
         [TestCase("2","1")]
         public async Task AddExistingFriend_Add_FriendResult(string userId, string friendId)
         {
-            var resultAddFriend = await _friendService.Add(userId, friendId);
+            var actionResultAddFriend = await _friendController.Add(userId, friendId);
+            var errorResultAddFriend = actionResultAddFriend as ObjectResult;
             
-            Assert.NotNull(resultAddFriend,"users is null");
-            Assert.IsInstanceOf<FriendResult>(resultAddFriend);
-            Assert.False(resultAddFriend.Succeeded);
+            Assert.NotNull(errorResultAddFriend);
+            Assert.True(errorResultAddFriend is ConflictObjectResult);
+            Assert.IsInstanceOf<Result>(errorResultAddFriend.Value);
+            Assert.AreEqual(StatusCodes.Status409Conflict, errorResultAddFriend.StatusCode);
         }
     }
 }

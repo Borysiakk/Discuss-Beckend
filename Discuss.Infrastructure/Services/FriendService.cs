@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Discuss.Domain.Interfaces;
 using Discuss.Domain.Models.Contract.Result;
@@ -20,7 +21,7 @@ namespace Discuss.Infrastructure.Services
         }
 
 
-        public async Task<FriendResult> Add(string userId, string friendId)
+        public async Task<Result> AddAsync(string userId, string friendId)
         {
             var friends = _dbContext.Friends.Where(a => a.UserId == userId);
             if (friends.Any())
@@ -28,9 +29,10 @@ namespace Discuss.Infrastructure.Services
                 var isFriend = await friends.FirstOrDefaultAsync(a => a.FriendlyId == friendId);
                 if (isFriend != null)
                 {
-                    return new FriendResult()
+                    return new Result()
                     {
                         Succeeded = false,
+                        StatusCode = HttpStatusCode.Conflict,
                         Errors = new[] { "You have this friend in friends " }
                     };
                 }
@@ -45,9 +47,10 @@ namespace Discuss.Infrastructure.Services
             await _dbContext.Friends.AddAsync(friend);
             await _dbContext.SaveChangesAsync();
 
-            return new FriendResult()
+            return new Result()
             {
                 Succeeded = true,
+                StatusCode = HttpStatusCode.OK,
             };
         }
 
