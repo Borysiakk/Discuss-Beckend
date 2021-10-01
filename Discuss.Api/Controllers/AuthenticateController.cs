@@ -6,6 +6,7 @@ using Discuss.Domain.Models;
 using Discuss.Domain.Models.Contract;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
 
 namespace Discuss.Api.Controllers
 {
@@ -51,11 +52,11 @@ namespace Discuss.Api.Controllers
                 var result = await _authenticateService.RegisterAsync(register);
                 if (result.Succeeded)
                 {
-                    return new CreatedResult("", result);
+                    return new OkObjectResult(result);
                 }
                 else
                 {
-                    return new UnauthorizedObjectResult(result);
+                    return new BadRequestObjectResult(result);
                 }
                 
             }

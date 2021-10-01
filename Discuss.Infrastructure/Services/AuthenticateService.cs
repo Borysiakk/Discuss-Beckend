@@ -77,6 +77,7 @@ namespace Discuss.Infrastructure.Services
 
             return new AuthenticateResult()
             {
+                User = user,
                 Succeeded = true,
                 AuthDate = DateTime.Now,
                 StatusCode = resultCreateUser.StatusCode,
