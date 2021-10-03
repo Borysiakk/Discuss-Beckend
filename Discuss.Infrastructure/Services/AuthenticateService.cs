@@ -31,6 +31,7 @@ namespace Discuss.Infrastructure.Services
                 return new AuthenticateResult()
                 {
                     Succeeded = false,
+                    User=null,
                     Errors = new[] {"User not found"},
                     StatusCode = HttpStatusCode.Unauthorized,
                 };
@@ -42,6 +43,7 @@ namespace Discuss.Infrastructure.Services
                 return new AuthenticateResult()
                 {
                     Succeeded = false,
+                    User = null,
                     Errors = new[] {"User not found"},
                     StatusCode = HttpStatusCode.Unauthorized,
                 };
@@ -50,6 +52,7 @@ namespace Discuss.Infrastructure.Services
             return new AuthenticateResult()
             {
                 Succeeded = true,
+                User = resultFindLogin,
                 AuthDate = DateTime.Now,
                 StatusCode = HttpStatusCode.OK,
                 Token = _tokenService.Generate(resultFindLogin),
@@ -70,6 +73,7 @@ namespace Discuss.Infrastructure.Services
                 return new AuthenticateResult()
                 {
                     Succeeded = false,
+                    User = null,
                     Errors = resultCreateUser.Errors,
                     StatusCode = resultCreateUser.StatusCode,
                 };
@@ -78,6 +82,7 @@ namespace Discuss.Infrastructure.Services
             return new AuthenticateResult()
             {
                 Succeeded = true,
+                User = resultCreateUser.User,
                 AuthDate = DateTime.Now,
                 StatusCode = resultCreateUser.StatusCode,
                 Token = _tokenService.Generate(resultCreateUser.User),
