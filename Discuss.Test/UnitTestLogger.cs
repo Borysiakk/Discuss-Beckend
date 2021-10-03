@@ -10,12 +10,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discuss.SignalR.Models;
+using Microsoft.EntityFrameworkCore;
+using Discuss.Persistence;
+using Discuss.Infrastructure.Services;
+using Discuss.Domain.Models.Entities;
 
 namespace Discuss.Test
 {
     [TestFixture]
     public class UnitTestLogger
     {
+        private UserService _userService;
+        private DbContextOptions<ApplicationDbContext> _dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName: "UnitTestLogger").Options;
         Mock<ILogger<CommunicationHub>> _loggerMock;
         CommunicationHub _hub;
 
@@ -23,7 +29,22 @@ namespace Discuss.Test
         public void Setup()
         {
             _loggerMock = new Mock<ILogger<CommunicationHub>>();
-            _hub = new CommunicationHub(_loggerMock.Object);
+            _userService = new UserService(new ApplicationDbContext(_dbContextOptions));
+            _hub = new CommunicationHub(_loggerMock.Object, _userService);
+        }
+
+        private void InitDbDData()
+        {
+            using var dbContext = new ApplicationDbContext(_dbContextOptions);
+            var users = new List<User>()
+            {
+                new User{ Id = "0", Email = "1@gmail.com", Login = "LoginA"},
+                new User{ Id = "1", Email = "2@gmail.com", Login = "LoginB"},
+                new User{ Id = "2", Email = "3@gmail.com", Login = "LoginC"},
+            };
+
+            dbContext.AddRange(users);
+            dbContext.SaveChanges();
         }
 
         [TestCase("1 Test run")]

@@ -20,5 +20,7 @@ namespace Discuss.Domain.Interfaces
         Task<User> GetUserByEmailAsync(string email);
         Task<User> GetUserByLoginAsync(string login);
         Task<IEnumerable<User>> GetUsersByLoginAsync(string login);
+        Task<bool> AddClientCommunicationHubIdAsync(User user, string communicationId);
+        Task<bool> RemoveClientCommunicationHubIdAsync(User user);
     }
 }

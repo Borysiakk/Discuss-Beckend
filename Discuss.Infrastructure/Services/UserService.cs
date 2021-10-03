@@ -115,5 +115,33 @@ namespace Discuss.Infrastructure.Services
             var users = await _dbContext.Users.Where(a => a.Login.Contains(login)).ToListAsync();
             return users.AsEnumerable<User>();
         }
+
+        public async Task<bool> AddClientCommunicationHubIdAsync(User user, string communicationId)
+        {
+            var selectedUser = await _dbContext.Users.FirstOrDefaultAsync(a => a.Id == user.Id);
+            if (selectedUser == null || string.IsNullOrEmpty(communicationId))
+            {
+                return false;
+            }
+            selectedUser.ClientCommunicationHubId = communicationId;
+            _dbContext.Users.Update(selectedUser);
+            await _dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> RemoveClientCommunicationHubIdAsync(User user)
+        {
+            var selectedUser = await _dbContext.Users.FirstOrDefaultAsync(a => a.Id == user.Id);
+            if (selectedUser == null)
+            {
+                return false;
+            }
+            selectedUser.ClientCommunicationHubId = null;
+            _dbContext.Users.Update(selectedUser);
+            await _dbContext.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
